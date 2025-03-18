@@ -1,13 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QProcess>  // 用于执行外部命令
+#include <QRegularExpression>  // 新增此行
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle("浮黎 V1.0.1"); // 修改此行
+    this->setWindowTitle("浮黎 V1.0.2"); // 修改此行
 }
 
 MainWindow::~MainWindow()
@@ -48,14 +49,28 @@ void MainWindow::on_outputBtn_clicked()
 }
 
 bool MainWindow::mergeFiles(const QString& video, const QString& audio, const QString& output) {
-    QString command = QString("ffmpeg -y -i \"%1\" -i \"%2\" -c copy -map 0:v -map 1:a \"%3\"")
-    .arg(video).arg(audio).arg(output);
+    QProcess *process = new QProcess(this);
+    connect(process, &QProcess::readyReadStandardError, [=]() {
+        QString output = QString::fromLocal8Bit(process->readAllStandardError());
+        updateProgress(output);
+    });
 
-    QProcess process;
-    process.startCommand(command);
-    process.waitForFinished();
+    connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            [=](int exitCode, QProcess::ExitStatus status) {
+                process->deleteLater();
+                if (exitCode == 0) {
+                    QMessageBox::information(this, "成功", "文件合并完成！");
+                } else {
+                    QMessageBox::critical(this, "失败", "合并过程中出现错误");
+                }
+                ui->progressBar->setValue(0); // 重置进度条
+            });
 
-    return (process.exitCode() == 0);
+    QString command = QString("ffmpeg -y -hide_banner -stats -i \"%1\" -i \"%2\" -c copy -map 0:v -map 1:a \"%3\"")
+                          .arg(video).arg(audio).arg(output);
+
+    process->start(command);
+    return process->waitForStarted(); // 立即返回，不阻塞
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -69,12 +84,36 @@ void MainWindow::on_pushButton_clicked()
         return;
     }
 
-    if(mergeFiles(video, audio, output)) {
-        QMessageBox::information(this, "成功", "文件合并完成！");
-    } else {
-        QMessageBox::critical(this, "失败", "合并过程中出现错误");
+    ui->progressBar->setValue(0); // 开始前重置进度
+    if(!mergeFiles(video, audio, output)) {
+        QMessageBox::critical(this, "错误", "无法启动FFmpeg进程");
     }
 }
 
+void MainWindow::updateProgress(const QString &output) {
+    static qint64 duration = 0;
+    QRegularExpression reDuration(R"(Duration: (\d{2}):(\d{2}):(\d{2})\.\d{2})");
+    QRegularExpression reTime(R"(time=(\d{2}):(\d{2}):(\d{2})\.\d{2})");
 
+    // 解析总时长
+    if (duration == 0) {
+        auto match = reDuration.match(output);
+        if (match.hasMatch()) {
+            duration = match.captured(1).toInt() * 3600 +
+                       match.captured(2).toInt() * 60 +
+                       match.captured(3).toInt();
+        }
+    }
+
+    // 解析当前时间
+    auto timeMatch = reTime.match(output);
+    if (timeMatch.hasMatch() && duration > 0) {
+        qint64 current = timeMatch.captured(1).toInt() * 3600 +
+                         timeMatch.captured(2).toInt() * 60 +
+                         timeMatch.captured(3).toInt();
+
+        int progress = static_cast<int>((current * 100) / duration);
+        ui->progressBar->setValue(progress);
+    }
+}
 

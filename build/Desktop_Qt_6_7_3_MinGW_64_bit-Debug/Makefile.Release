@@ -747,7 +747,9 @@ release/mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qdialogbuttonbox.h \
 		ui_mainwindow.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/QProcess \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qprocess.h
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qprocess.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QRegularExpression \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qregularexpression.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\mainwindow.o ..\..\mainwindow.cpp
 
 release/moc_mainwindow.o: release/moc_mainwindow.cpp 

@@ -31,6 +31,9 @@ private slots:
     // 新增合并函数声明
     bool mergeFiles(const QString& video, const QString& audio, const QString& output);
 
+    //实现进度解析逻辑（新增函数）
+    void updateProgress(const QString &output);
+
 private:
 
     Ui::MainWindow *ui;
