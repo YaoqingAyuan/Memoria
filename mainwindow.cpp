@@ -2,13 +2,14 @@
 #include "ui_mainwindow.h"
 #include <QProcess>  // 用于执行外部命令
 #include <QRegularExpression>  // 新增此行
+#include <QStandardPaths>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle("浮黎 V1.1.2"); // 修改此行
+    this->setWindowTitle("浮黎 V1.2.2"); // 修改此行
 }
 
 MainWindow::~MainWindow()
@@ -123,5 +124,43 @@ void MainWindow::updateProgress(const QString &output) {
         int progress = static_cast<int>((current * 100) / duration);
         ui->progressBar->setValue(progress);
     }
+}
+
+
+void MainWindow::on_titlefolderBtn_clicked()
+{
+    // 选择文件夹
+    QString folderPath = QFileDialog::getExistingDirectory(
+        this, "选择包含音视频的文件夹", QDir::homePath()
+        );
+    if (folderPath.isEmpty()) return;
+
+    // 获取文件夹名称
+    QDir dir(folderPath);
+    QString folderName = dir.dirName();
+
+    // 构建文件路径
+    QString videoPath = dir.filePath("video.m4s");
+    QString audioPath = dir.filePath("audio.m4s");
+
+    // 验证文件存在性
+    if (!QFile::exists(videoPath) || !QFile::exists(audioPath)) {
+        QMessageBox::warning(this, "错误", "未找到标准音视频文件");
+        return;
+    }
+
+    // 生成默认输出路径
+    QString downloadPath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+    QString outputPath = QDir::toNativeSeparators(
+        downloadPath + "/" + folderName + ".mp4"
+        );
+
+    // 自动创建目录
+    QDir().mkpath(QFileInfo(outputPath).path());
+
+    // 填充UI
+    ui->videoEdit->setText(videoPath);
+    ui->audioEdit->setText(audioPath);
+    ui->outputEdit->setText(outputPath);
 }
 

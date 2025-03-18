@@ -37,6 +37,7 @@ public:
     QLabel *label_3;
     QPushButton *pushButton;
     QProgressBar *progressBar;
+    QPushButton *titlefolderBtn;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -86,6 +87,9 @@ public:
         progressBar->setObjectName("progressBar");
         progressBar->setGeometry(QRect(180, 420, 471, 23));
         progressBar->setValue(0);
+        titlefolderBtn = new QPushButton(centralwidget);
+        titlefolderBtn->setObjectName("titlefolderBtn");
+        titlefolderBtn->setGeometry(QRect(70, 100, 211, 28));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -110,6 +114,7 @@ public:
         outputBtn->setText(QCoreApplication::translate("MainWindow", "\346\265\217\350\247\210...", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "\350\276\223\345\207\272\350\267\257\345\276\204\357\274\232", nullptr));
         pushButton->setText(QCoreApplication::translate("MainWindow", "\345\274\200\345\247\213\345\220\210\345\271\266", nullptr));
+        titlefolderBtn->setText(QCoreApplication::translate("MainWindow", "\346\240\207\351\242\230\346\226\207\344\273\266\345\244\271\351\200\211\346\213\251\346\250\241\345\274\217 \346\265\217\350\247\210...", nullptr));
     } // retranslateUi
 
 };

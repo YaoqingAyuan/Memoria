@@ -34,6 +34,8 @@ private slots:
     //实现进度解析逻辑（新增函数）
     void updateProgress(const QString &output);
 
+    void on_titlefolderBtn_clicked();
+
 private:
 
     Ui::MainWindow *ui;
