@@ -747,7 +747,13 @@ debug/mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qdialogbuttonbox.h \
 		ui_mainwindow.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/QProcess \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qprocess.h
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qprocess.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QRegularExpression \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qregularexpression.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QStandardPaths \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qstandardpaths.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QSettings \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qsettings.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\mainwindow.o ..\..\mainwindow.cpp
 
 debug/moc_mainwindow.o: debug/moc_mainwindow.cpp 

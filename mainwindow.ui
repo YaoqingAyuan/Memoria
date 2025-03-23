@@ -163,6 +163,19 @@
      <number>0</number>
     </property>
    </widget>
+   <widget class="QPushButton" name="titlefolderBtn">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>100</y>
+      <width>191</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>浏览标题文件夹 ...</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
